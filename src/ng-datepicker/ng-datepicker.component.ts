@@ -93,6 +93,9 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit, OnCh
   }[];
   locale: object;
 
+  showMinYears: number  = 100;
+  subtractYears: number = 21;
+
   private onTouchedCallback: () => void = () => { };
   private onChangeCallback: (_: any) => void = () => { };
 
@@ -119,7 +122,7 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit, OnCh
   }
 
   ngOnInit() {
-    this.view = 'days';
+    this.view = 'years';
     this.date = new Date();
     this.setOptions();
     this.initDayNames();
@@ -142,9 +145,9 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit, OnCh
 
   setOptions(): void {
     const today = new Date(); // this const was added because during my tests, I noticed that at this level this.date is undefined
-    this.minYear = this.options && this.options.minYear || getYear(today) - 30;
-    this.maxYear = this.options && this.options.maxYear || getYear(today) + 30;
-    this.displayFormat = this.options && this.options.displayFormat || 'MMM D[,] YYYY';
+    this.minYear = this.options && this.options.minYear || getYear(today) - this.showMinYears;
+    this.maxYear = this.options && this.options.maxYear || getYear(today) - this.subtractYears;
+    this.displayFormat = this.options && this.options.displayFormat || 'DD/MM/YYYY';
     this.barTitleFormat = this.options && this.options.barTitleFormat || 'MMMM YYYY';
     this.firstCalendarDay = this.options && this.options.firstCalendarDay || 0;
     this.locale = this.options && { locale: this.options.locale } || {};
@@ -255,6 +258,7 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit, OnCh
 
   toggle(): void {
     this.isOpened = !this.isOpened;
+    this.view = 'years';
   }
 
   close(): void {
@@ -262,13 +266,8 @@ export class NgDatepickerComponent implements ControlValueAccessor, OnInit, OnCh
   }
 
   writeValue(val: Date) {
-    if (val) {
-      this.date = val;
-      this.innerValue = val;
-      this.init();
-      this.displayValue = format(this.innerValue, this.displayFormat, this.locale);
-      this.barTitle = format(startOfMonth(val), this.barTitleFormat, this.locale);
-    }
+    let minDateVal = setYear(new Date(), (this.options && this.options.minYear || getYear(new Date()) - this.showMinYears));
+    this.barTitle = format(startOfMonth(minDateVal), this.barTitleFormat, this.locale);
   }
 
   registerOnChange(fn: any) {

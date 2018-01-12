@@ -1,3 +1,17 @@
+<style type="text/css">
+  .ngx-datepicker-container[_ngcontent-c0] .ngx-datepicker-calendar-container[_ngcontent-c0] {
+      position: absolute;
+      width: 300px;
+      background: #ffffff;
+      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.08);
+      border: 1px solid #DFE3E9;
+      border-radius: 4px;
+      min-height: 300px !important;
+  }
+  .slimscroll-wrapper {
+      height: 100% !important;
+  }
+</style>
 <div class="ngx-datepicker-container">
   <input type="text" *ngIf="!headless" class="ngx-datepicker-input" [(ngModel)]="displayValue" readonly (click)="toggle()">
   <ng-content></ng-content>
